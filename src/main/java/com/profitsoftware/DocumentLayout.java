@@ -11,7 +11,8 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextArea;
 
 
-public class DocumentLayout extends VerticalLayout {
+public class DocumentLayout extends VerticalLayout
+{
   public HorizontalLayout buttonsLayout;
   public Button editButton;
   public Button sendButton;
@@ -24,7 +25,8 @@ public class DocumentLayout extends VerticalLayout {
   public TextArea preview;
   public Grid<Field> fieldsGrid;
 
-  public DocumentLayout() {
+  public DocumentLayout()
+  {
     setWidth("40%");
 
     buttonsLayout = new HorizontalLayout();
@@ -58,24 +60,26 @@ public class DocumentLayout extends VerticalLayout {
 
     preview = new TextArea();
     preview.setWidth("100%");
-    preview.setHeight("400px");
+    preview.setHeight("800px");
 
-    fieldsGrid = new Grid<Field>(Field.class);
+    fieldsGrid = new Grid<Field>();
     fieldsGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-
-    for (Grid.Column column : fieldsGrid.getColumns())
-      column.setSortable(false);
+    fieldsGrid.addColumn(Field::getName).setHeader("Kenttä");
+    fieldsGrid.addColumn(Field::getValue).setHeader("Arvo");
 
     add(preview);
 //    add(fieldsGrid);
   }
 
-  private void tabSelected(Tab tab) {
-    if (tab == previewTab) {
+  private void tabSelected(Tab tab)
+  {
+    if (tab == previewTab)
+    {
       remove(fieldsGrid);
       add(preview);
     }
-    else if (tab == metaTab) {
+    else if (tab == metaTab)
+    {
       remove(preview);
       add(fieldsGrid);
     }

@@ -6,22 +6,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainLayout extends HorizontalLayout {
+public class ContentView extends HorizontalLayout
+{
   public DocumentsLayout documentsLayout;
   public DocumentLayout documentLayout;
   public Document document = null;
   private List<Document> documents = null;
 
-  public MainLayout() {
-    setWidth("100%");
-
+  public ContentView()
+  {
     documentsLayout = new DocumentsLayout();
     documentLayout = new DocumentLayout();
 
     add(documentsLayout);
   }
 
-  public void setDocuments(List<Document> documents) {
+  public void setDocuments(List<Document> documents)
+  {
     this.documents = documents;
 
     documentsLayout.grid.setItems(documents);
@@ -31,10 +32,12 @@ public class MainLayout extends HorizontalLayout {
     documentLayout.closeButton.addClickListener(event -> closeDocument());
   }
 
-  private void selectDocument(Document document) {
+  private void selectDocument(Document document)
+  {
     this.document = document;
 
-    if (document != null) {
+    if (document != null)
+    {
       add(documentLayout);
 
       documentLayout.preview.setValue(document.toString());
@@ -43,6 +46,7 @@ public class MainLayout extends HorizontalLayout {
       fields.add(new Field("id", document.getId()));
       fields.add(new Field("name", document.getName()));
       fields.add(new Field("code", document.getCode()));
+      fields.add(new Field("insuranceNumber", document.getInsuranceNumber()));
       fields.add(new Field("personalNumber", document.getPersonalNumber()));
       fields.add(new Field("businessId", document.getBusinessId()));
       fields.add(new Field("createdTime", document.getCreatedTime() != null ? document.getCreatedTime().toString() : ""));
@@ -54,24 +58,28 @@ public class MainLayout extends HorizontalLayout {
       remove(documentLayout);
   }
 
-  private void sendDocument() {
+  private void sendDocument()
+  {
     SendDocumentDialog dialog = new SendDocumentDialog(document);
     dialog.open();
   }
 
-  private void confirmRemoveDocument() {
+  private void confirmRemoveDocument()
+  {
     RemoveDocumentDialog dialog = new RemoveDocumentDialog(document, event -> removeDocument());
     dialog.open();
   }
 
-  private void removeDocument() {
+  private void removeDocument()
+  {
     documents.remove(document);
     documentsLayout.grid.setItems(documents);
 
     selectDocument(null);
   }
 
-  private void closeDocument() {
+  public void closeDocument()
+  {
     selectDocument(null);
   }
 }

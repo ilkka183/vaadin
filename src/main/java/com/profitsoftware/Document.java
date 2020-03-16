@@ -2,19 +2,23 @@ package com.profitsoftware;
 
 import java.util.Date;
 
-public class Document {
+public class Document
+{
   private String id;
   private String name;
   private String code;
+  private String insuranceNumber;
   private String personalNumber;
   private String businessId;
   private Date createdTime = new Date();
   private Date modifiedTime = null;
 
-  public Document(String id, String name, String code, String personalNumber, String businessId) {
+  public Document(String id, String name, String code, String insuranceNumber, String personalNumber, String businessId)
+  {
     this.id = id;
     this.name = name;
     this.code = code;
+    this.insuranceNumber = insuranceNumber;
     this.personalNumber = personalNumber;
     this.businessId = businessId;
   }
@@ -38,6 +42,13 @@ public class Document {
   }
   public void setCode(String value) {
     code = value;
+  }
+
+  public String getInsuranceNumber() {
+    return insuranceNumber;
+  }
+  public void setInsuranceNumber(String value) {
+    insuranceNumber = value;
   }
 
   public String getPersonalNumber() {

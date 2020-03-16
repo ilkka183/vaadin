@@ -7,8 +7,10 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 
-public class MessageDialog extends Dialog {
-  public MessageDialog(String text) {
+public class MessageDialog extends Dialog
+{
+  public MessageDialog(String text)
+  {
     add(new Label(text));
 
     HorizontalLayout buttons = new HorizontalLayout();
@@ -20,5 +22,11 @@ public class MessageDialog extends Dialog {
     buttons.add(okButton);
 
     add(buttons);
+  }
+
+  public static void show(String text)
+  {
+    MessageDialog dialog = new MessageDialog(text);
+    dialog.open();
   }
 }

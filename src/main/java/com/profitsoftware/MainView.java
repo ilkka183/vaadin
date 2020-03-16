@@ -1,12 +1,8 @@
 package com.profitsoftware;
 
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Route
@@ -15,90 +11,72 @@ import java.util.List;
 public class MainView extends VerticalLayout
 {
   private Header header;
-  private LoginLayout loginLayout;
-  private MainLayout mainLayout;
+  private LoginView loginView;
+  private ContentView contentView;
 
   private User user = null;
-  private List<User> users = new ArrayList<>();
-  private List<Document> documents = new ArrayList<>();
+  private Users users = new Users();
+  private Documents documents = new Documents();
 
   public MainView()
   {
-    users.add(new User("ilkka", "huuhaa", "Ilkka", "Salmenius"));
-    users.add(new User("antti", "huuhaa", "Antti", "Laurila"));
-    users.add(new User("teppo", "huuhaa", "Teppo", "Testaaja"));
-
-    documents.add(new Document("1", "Ilkka Salmenius", "ABC", "010101-XXXX", ""));
-    documents.add(new Document("2", "Antti Laurila", "123", "010201-XXXX", "3-1234567"));
-    documents.add(new Document("3", "Teppo Testaaja", "XYZ", "010301-XXXX", ""));
-    documents.add(new Document("3", "Matti meikäläinen", "KLM", "010301-yyyy", ""));
-
     header = new Header();
+    add(header);
 
-    loginLayout = new LoginLayout();
-    loginLayout.loginButton.addClickListener(event -> login());
+    loginView = new LoginView();
+    loginView.loginButton.addClickListener(event -> login());
 
-    mainLayout = new MainLayout();
-    mainLayout.documentsLayout.logoutButton.addClickListener(event -> setUser(null));
-    mainLayout.setDocuments(documents);
+    contentView = new ContentView();
+    contentView.documentsLayout.logoutButton.addClickListener(event -> setUser(null));
+    contentView.setDocuments(documents);
+    contentView.setWidth("100%");
 
     setUser(users.get(0));
   }
 
-  private void showMessage(String text) {
-    MessageDialog dialog = new MessageDialog(text);
-    dialog.open();
-  }
-
-  private User findUser(String username)
+  private void setUser(User user)
   {
-    for (User user : users)
-      if (user.getUsername().equals(username))
-        return user;
+    this.user = user;
 
-    return null;
-  }
+    if (user != null)
+    {
+      remove(loginView);
+      add(contentView);
+    }
+    else
+    {
+      contentView.closeDocument();
 
-  private void setUser(User user) {
-    if (user != null) {
-      this.user = user;
-
-//    usernameField.clear();
-//    passwordField.clear();
-
-      remove(loginLayout);
-      add(mainLayout);
-    } else {
-      user = null;
-
-      remove(mainLayout);
-      add(loginLayout);
+      add(loginView);
+      remove(contentView);
     }
   }
 
   private void login()
   {
-    String username = loginLayout.usernameField.getValue();
-    String password = loginLayout.passwordField.getValue();
+    String username = loginView.usernameField.getValue();
+    String password = loginView.passwordField.getValue();
 
-    if (username.isEmpty() || password.isEmpty()) {
-      showMessage("Käyttäjänunnus ja salasana vaaditaan!");
+    if (username.isEmpty())
+    {
+      MessageDialog.show("Käyttäjänunnus puuttuu!");
       return;
     }
 
-    User user = findUser(username);
+    if (password.isEmpty())
+    {
+      MessageDialog.show("Salasana puuttuu!");
+      return;
+    }
+
+    User user = users.find(username);
 
     if ((user != null) && (user.getPassword().equals(password)))
+    {
+      loginView.clearFields();
       setUser(user);
+    }
     else
-      showMessage("Käyttäjänunnus tai salasana on virheellinen!");
-  }
-
-  private void showPreview() {
-    showMessage("Preview");
-  }
-
-  private void showMeta() {
-    showMessage("Meta");
+      MessageDialog.show("Käyttäjänunnus tai salasana on virheellinen!");
   }
 }
